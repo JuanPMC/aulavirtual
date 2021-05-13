@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, abort, flash, redirect, url_for, request
 from flask_login import login_required, current_user
 
-from models import get_db, User, Entrada
+from models import get_db, User, Entrada, Comentario
 
 from module002.forms import *
 
@@ -41,6 +41,41 @@ def module002_crear_entrada():
             flash("Access denied!")
     #       abort(404,description="Access denied!")
             return redirect(url_for('index'))
+
+@module002.route('/entradas')
+@login_required
+def module002_entradas():
+    if current_user.profile in ('admin','staff','student'):
+        entradas = Entrada.query.all()
+        return render_template("module002_entradas.html",module="module002", rows=entradas)
+    else:
+        flash("Access denied!")
+#        abort(404,description="Access denied!")
+        return redirect(url_for('index'))
+
+@module002.route('/entrada',methods=['GET','POST'])
+@login_required
+def module002_entrada():
+    entrada = Entrada.query.filter_by(id=request.args.get('rowid')).first()
+    if current_user.profile in ('admin','staff','student'):
+        form = ComentarioForm()
+        if request.method == 'POST':
+            if form.validate_on_submit():
+                comentario = Comentario(cuerpo=form.cuerpo.data,user_id=current_user.id,entrada_id=entrada.id)
+                db.session.add(comentario)
+                try:
+                    db.session.commit()
+                    flash("Todo guay")
+                except:
+                    db.session.rollback()
+                    flash("Error in database!")
+                    return redirect(url_for('index'))
+        comentarios = Comentario.query.filter_by(entrada_id = entrada.id)
+        return render_template("module002_entrada.html",module="module002", entrada=entrada, comentarios=comentarios,form=form)
+    else:
+        flash("Access denied!")
+#        abort(404,description="Access denied!")
+        return redirect(url_for('index'))
 
 
 @module002.route('/test')

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="table-responsive">
+    <table id="myTable" class="table table-striped">
+       <thead>
+            <tr>
+                <th>Titulo</th>
+                <th>Entrar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in rows %}
+            <tr>
+
+                <td> {{ row.titulo }} </td>
+
+               <td> <a><form action="{{url_for('module002.module002_entrada')}}" method="GET">
+                   <input type="submit" value={{ row.id }} name="rowid">
+               </form> </a></td>
+
+
+
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+{% endblock %}

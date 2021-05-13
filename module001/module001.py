@@ -87,15 +87,15 @@ def module001_sharing_details():
         if not course or course.user_id != current_user.id:
             flash("An error has occurred retrieving details for the activity")
             return redirect(url_for('module001.module001_course'))
-        qr.add_data("http://{}/follow?sharedlink=1&code={}".format(base_url,course.code))
+        qr.add_data("http://{}/course/follow?sharedlink=1&code={}".format(base_url,course.code))
         module,itemtype,item="library","course",course
-#    else:
-#        participation = ParticipationCode.query.get(request.args.get('rowid'))
-#        if not participation or participation.user_id != current_user.id:
-#            flash("An error has occurred retrieving details for the participation")
-#            return redirect(url_for('module001.module001_participation_generate'))
-#        qr.add_data("http://{}/participation_redeem?sharedlink=1&code={}".format(base_url,participation.code))
-#        module,itemtype,item="participation_gerenate","participation",participation
+    else:
+        participation = ParticipationCode.query.get(request.args.get('rowid'))
+        if not participation or participation.user_id != current_user.id:
+            flash("An error has occurred retrieving details for the participation")
+            return redirect(url_for('module001.module001_participation_generate'))
+        qr.add_data("http://{}/course/participation_redeem?sharedlink=1&code={}".format(base_url,participation.code))
+        module,itemtype,item="participation_gerenate","participation",participation
     try:
         qr.make() # Generate the QRCode itself
         im = qr.make_image()
@@ -249,11 +249,11 @@ def module001_participation_generate():
             flash("Error creating / updating participation!")
 
 
-#    elif ('redeems' in request.args) and ('rowid' in request.args):
-#        participation = ParticipationCode.query.get(request.args.get('rowid'))
-#        participations = ParticipationRedeem.query.filter(ParticipationRedeem.participation_code == participation.code)
-#        rows = [(User.query.filter_by(id=item.user_id).first(), item.date_created, item.date_modified) for item in participations]
-#        return render_template('participation_redeem_dashboad.html',module="participation_generate", form=form, rows=rows, participation_code=participation.code)
+    elif ('redeems' in request.args) and ('rowid' in request.args):
+        participation = ParticipationCode.query.get(request.args.get('rowid'))
+        participations = ParticipationRedeem.query.filter(ParticipationRedeem.participation_code == participation.code)
+        rows = [(User.query.filter_by(id=item.user_id).first(), item.date_created, item.date_modified) for item in participations]
+        return render_template('participation_redeem_dashboad.html',module="participation_generate", form=form, rows=rows, participation_code=participation.code)
     elif ('coursename' in request.args) and ('rowid' in request.args):
         form = ParticipationCodeForm(course_id=request.args.get('rowid'))
     elif ('rowid' in request.args):
