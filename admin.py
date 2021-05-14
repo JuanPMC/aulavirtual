@@ -52,6 +52,7 @@ def init_admin(app):
         admin.add_view(ProtectedView(ParticipationRedeem,db.session))
         admin.add_view(ProtectedView(Entrada,db.session))
         admin.add_view(ProtectedView(Comentario,db.session))
+        #admin.add_view(ProtectedView(Tarea,db.session))
         admin.add_link(MenuLink(name="Logout", url="/logout"))
         admin.add_link(MenuLink(name="Go back", url="/"))
     return admin

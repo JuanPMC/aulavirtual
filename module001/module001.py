@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 from sqlalchemy import or_, and_
 from models import get_db, User, Course, Follow, ParticipationCode, ParticipationRedeem
 import random
+import datetime
 
 from module001.forms import *
 

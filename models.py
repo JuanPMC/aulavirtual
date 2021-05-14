@@ -95,3 +95,11 @@ class Comentario(UserMixin,db.Model): # User extends db.Model
     cuerpo = db.Column(db.String(120))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     entrada_id = db.Column(db.Integer, db.ForeignKey('entrada.id'), nullable=False)
+
+class Tarea(UserMixin,db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    titulo = db.Column(db.String(30), nullable=False)
+    contenido = db.Column(db.String(255))
+    fecha  = db.Column(db.DateTime, nullable=False)
+    file = db.Column(db.String(255), nullable=True)
+    nota =  db.Column(db.Float, nullable=True)
